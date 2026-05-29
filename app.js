@@ -4,7 +4,7 @@ App({
     userInfo: null,
     isLoggedIn: false,
     // 云开发环境ID
-    cloudEnv: 'YOUR_CLOUD_ENV_ID'
+    cloudEnv: 'ipd-project-d0ghhllv9d3fdea86'
   },
 
   onLaunch() {
