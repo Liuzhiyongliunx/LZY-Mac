@@ -11,14 +11,19 @@ App({
     // 检查登录状态
     this.checkLoginStatus();
     
-    // 初始化云开发
-    if (!wx.cloud) {
-      console.error('请使用 2.2.3 或以上的基础库以使用云能力');
-    } else {
-      wx.cloud.init({
-        env: this.globalData.cloudEnv,
-        traceUser: true,
-      });
+    // 尝试初始化云开发（如果已开通则启用，未开通则静默跳过）
+    try {
+      if (wx.cloud) {
+        wx.cloud.init({
+          env: this.globalData.cloudEnv,
+          traceUser: true,
+        });
+        this.globalData.cloudReady = true;
+        console.log('云开发已就绪');
+      }
+    } catch (e) {
+      console.log('云开发未开通，使用本地存储模式');
+      this.globalData.cloudReady = false;
     }
   },
 
