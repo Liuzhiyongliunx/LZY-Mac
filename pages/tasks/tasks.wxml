@@ -1,0 +1,119 @@
+<view class="page">
+
+  <!-- 统计横条 -->
+  <view class="stats-bar">
+    <view class="stat-item" bindtap="switchFilter" data-filter="all">
+      <text class="stat-num">{{stats.total}}</text>
+      <text class="stat-lbl">全部</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item" bindtap="switchFilter" data-filter="pending">
+      <text class="stat-num pending">{{stats.pending}}</text>
+      <text class="stat-lbl">待开始</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item" bindtap="switchFilter" data-filter="doing">
+      <text class="stat-num doing">{{stats.doing}}</text>
+      <text class="stat-lbl">进行中</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item" bindtap="switchFilter" data-filter="done">
+      <text class="stat-num done">{{stats.done}}</text>
+      <text class="stat-lbl">已完成</text>
+    </view>
+  </view>
+
+  <!-- 筛选标签 -->
+  <scroll-view class="filter-scroll" scroll-x>
+    <view class="filter-tabs">
+      <view
+        wx:for="{{filters}}"
+        wx:key="key"
+        class="filter-tab {{activeFilter === item.key ? 'active' : ''}}"
+        bindtap="switchFilter"
+        data-filter="{{item.key}}"
+      >{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- 任务列表 -->
+  <view class="task-list">
+
+    <view wx:if="{{filteredTasks.length === 0}}" class="empty-box">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无任务</text>
+      <view class="add-btn" bindtap="goAddTask">
+        <text>+ 去打卡时添加任务</text>
+      </view>
+    </view>
+
+    <view
+      wx:for="{{filteredTasks}}"
+      wx:key="id"
+      class="task-card {{item.progress >= 100 ? 'done' : ''}} {{item.isOverdue ? 'overdue' : ''}}"
+    >
+      <!-- 左侧优先级色条 -->
+      <view class="priority-bar priority-{{item.priority}}"></view>
+
+      <view class="card-body">
+        <!-- 第一行：任务名 + 状态标签 -->
+        <view class="row-1">
+          <text class="task-name {{item.progress >= 100 ? 'strikethrough' : ''}}">{{item.name}}</text>
+          <view class="status-tag status-{{item.progress >= 100 ? 'done' : (item.progress > 0 ? 'doing' : 'pending')}}">
+            <text>{{item.statusLabel}}</text>
+          </view>
+        </view>
+
+        <!-- 描述 -->
+        <view wx:if="{{item.description}}" class="task-desc">
+          <text>{{item.description}}</text>
+        </view>
+
+        <!-- 第二行：元信息 -->
+        <view class="row-meta">
+          <text class="meta-chip priority-chip priority-{{item.priority}}">{{item.priorityText}}优先</text>
+          <text class="meta-chip">📅 {{item.date}}</text>
+          <text wx:if="{{item.deadlineDisplay}}" class="meta-chip {{item.isOverdue ? 'overdue-chip' : ''}}">
+            ⏰ 截止{{item.deadlineDisplay}}
+          </text>
+          <text class="meta-chip">⏱ {{item.estimatedTime}}h</text>
+        </view>
+
+        <!-- 进度条 -->
+        <view class="progress-row">
+          <view class="progress-bar-bg">
+            <view class="progress-bar-fill {{item.progress >= 100 ? 'fill-done' : (item.progress > 0 ? 'fill-doing' : 'fill-pending')}}" style="width:{{item.progress}}%"></view>
+          </view>
+          <text class="progress-pct">{{item.progress}}%</text>
+        </view>
+
+        <!-- 快捷进度按钮 -->
+        <view wx:if="{{item.progress < 100}}" class="quick-btns">
+          <view class="quick-btn" bindtap="setProgress" data-taskid="{{item.id}}" data-value="25">25%</view>
+          <view class="quick-btn" bindtap="setProgress" data-taskid="{{item.id}}" data-value="50">50%</view>
+          <view class="quick-btn" bindtap="setProgress" data-taskid="{{item.id}}" data-value="75">75%</view>
+          <view class="quick-btn done-btn" bindtap="markDone" data-taskid="{{item.id}}">✓ 完成</view>
+        </view>
+
+        <!-- 滑动条 -->
+        <view wx:if="{{item.progress < 100}}" class="slider-row">
+          <slider
+            value="{{item.progress}}"
+            min="0" max="100" step="5"
+            bindchange="onProgressChange"
+            data-taskid="{{item.id}}"
+            activeColor="#1890ff"
+            backgroundColor="#e8e8e8"
+            block-size="20"
+          />
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="action-row">
+          <view class="action-btn del-btn" bindtap="deleteTask" data-taskid="{{item.id}}" data-recordid="{{item.recordId}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+</view>

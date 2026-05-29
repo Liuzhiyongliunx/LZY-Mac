@@ -1,0 +1,247 @@
+/* pages/tasks/tasks.wxss */
+
+.page {
+  min-height: 100vh;
+  background: #f4f6f9;
+  padding-bottom: 40rpx;
+}
+
+/* ---- 统计横条 ---- */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 24rpx 0;
+  margin-bottom: 0;
+}
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+.stat-num {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #333;
+}
+.stat-num.pending { color: #aaa; }
+.stat-num.doing   { color: #1890ff; }
+.stat-num.done    { color: #52c41a; }
+.stat-lbl {
+  font-size: 22rpx;
+  color: #999;
+}
+.stat-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: #eee;
+}
+
+/* ---- 筛选标签 ---- */
+.filter-scroll {
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+  white-space: nowrap;
+}
+.filter-tabs {
+  display: flex;
+  padding: 0 20rpx;
+}
+.filter-tab {
+  display: inline-block;
+  padding: 20rpx 28rpx;
+  font-size: 28rpx;
+  color: #666;
+  border-bottom: 4rpx solid transparent;
+  white-space: nowrap;
+}
+.filter-tab.active {
+  color: #1890ff;
+  font-weight: 600;
+  border-bottom-color: #1890ff;
+}
+
+/* ---- 任务列表 ---- */
+.task-list {
+  padding: 24rpx 24rpx 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+/* 空状态 */
+.empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+  background: #fff;
+  border-radius: 20rpx;
+}
+.empty-icon { font-size: 80rpx; margin-bottom: 16rpx; }
+.empty-text { font-size: 28rpx; color: #999; margin-bottom: 32rpx; }
+.add-btn {
+  background: #1890ff;
+  color: #fff;
+  font-size: 26rpx;
+  padding: 16rpx 40rpx;
+  border-radius: 40rpx;
+}
+
+/* 任务卡片 */
+.task-card {
+  display: flex;
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+.task-card.done { opacity: 0.75; }
+.task-card.overdue { border: 2rpx solid #ff4d4f; }
+
+/* 左侧优先级色条 */
+.priority-bar {
+  width: 8rpx;
+  flex-shrink: 0;
+}
+.priority-bar.priority-high   { background: #ff4d4f; }
+.priority-bar.priority-medium { background: #1890ff; }
+.priority-bar.priority-low    { background: #52c41a; }
+
+.card-body {
+  flex: 1;
+  padding: 24rpx 24rpx 20rpx;
+}
+
+/* 第一行 */
+.row-1 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+  gap: 12rpx;
+}
+.task-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222;
+  flex: 1;
+  line-height: 1.4;
+}
+.task-name.strikethrough {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+/* 状态标签 */
+.status-tag {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.status-tag.status-pending { background: #f5f5f5; color: #aaa; }
+.status-tag.status-doing   { background: #e6f7ff; color: #1890ff; }
+.status-tag.status-done    { background: #f6ffed; color: #52c41a; }
+
+/* 描述 */
+.task-desc {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 14rpx;
+  line-height: 1.5;
+}
+
+/* 元信息 */
+.row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-bottom: 16rpx;
+}
+.meta-chip {
+  font-size: 22rpx;
+  background: #f5f5f5;
+  color: #888;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+.priority-chip.priority-high   { background: #fff1f0; color: #ff4d4f; }
+.priority-chip.priority-medium { background: #e6f7ff; color: #1890ff; }
+.priority-chip.priority-low    { background: #f6ffed; color: #52c41a; }
+.overdue-chip { background: #fff1f0; color: #ff4d4f; }
+
+/* 进度条 */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+.progress-bar-bg {
+  flex: 1;
+  height: 12rpx;
+  background: #eee;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 8rpx;
+  transition: width 0.3s;
+}
+.fill-pending { background: #ddd; }
+.fill-doing   { background: #1890ff; }
+.fill-done    { background: #52c41a; }
+.progress-pct {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1890ff;
+  min-width: 72rpx;
+  text-align: right;
+}
+
+/* 快捷进度按钮 */
+.quick-btns {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 10rpx;
+}
+.quick-btn {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  color: #666;
+  background: #f5f5f5;
+  padding: 10rpx 0;
+  border-radius: 10rpx;
+}
+.quick-btn.done-btn {
+  background: #52c41a;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 滑动条 */
+.slider-row slider {
+  margin: 0;
+}
+
+/* 操作按钮 */
+.action-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8rpx;
+}
+.action-btn {
+  font-size: 24rpx;
+  padding: 8rpx 24rpx;
+  border-radius: 8rpx;
+}
+.del-btn {
+  color: #ff4d4f;
+  background: #fff1f0;
+}

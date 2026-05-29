@@ -1,0 +1,122 @@
+<view class="page">
+
+  <!-- 顶部渐变背景 + 头像 -->
+  <view class="profile-header">
+    <view class="avatar-wrap" bindtap="editProfile">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/default-avatar.png'}}" mode="aspectFill"/>
+      <view class="avatar-edit-mask">
+        <text class="avatar-edit-txt">编辑</text>
+      </view>
+    </view>
+    <text class="user-name">{{userInfo.nickname || '未设置昵称'}}</text>
+    <text class="user-dept">{{userInfo.department || '研发部'}}</text>
+  </view>
+
+  <!-- 月度打卡进度 -->
+  <view class="progress-card">
+    <view class="progress-top">
+      <text class="progress-title">{{currentMonthStr}}打卡进度</text>
+      <text class="progress-rate">{{stats.checkedDays}}/{{stats.totalDays}} 天</text>
+    </view>
+    <view class="progress-bar-bg">
+      <view class="progress-bar-fill" style="width:{{monthProgress}}%"></view>
+    </view>
+    <text class="progress-pct">{{stats.completionRate}} 出勤率</text>
+  </view>
+
+  <!-- 四格统计 -->
+  <view class="stats-grid">
+    <view class="stats-cell">
+      <text class="stats-val blue">{{stats.totalHours}}</text>
+      <text class="stats-lbl">本月工时(h)</text>
+    </view>
+    <view class="stats-cell">
+      <text class="stats-val green">{{stats.doneTasks}}</text>
+      <text class="stats-lbl">已完成任务</text>
+    </view>
+    <view class="stats-cell">
+      <text class="stats-val">{{stats.totalTasks}}</text>
+      <text class="stats-lbl">总任务数</text>
+    </view>
+    <view class="stats-cell">
+      <text class="stats-val orange">{{stats.taskDoneRate}}</text>
+      <text class="stats-lbl">任务完成率</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-group">
+    <view class="menu-item" bindtap="editProfile">
+      <text class="menu-icon-txt">👤</text>
+      <text class="menu-label">修改昵称/部门</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="goToExport">
+      <text class="menu-icon-txt">📋</text>
+      <text class="menu-label">复制打卡记录</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="goToTeam">
+      <text class="menu-icon-txt">👥</text>
+      <text class="menu-label">团队成员</text>
+      <view class="menu-tag">开发中</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="goToRemind">
+      <text class="menu-icon-txt">⏰</text>
+      <text class="menu-label">打卡提醒</text>
+      <view class="menu-tag">开发中</view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="menu-group">
+    <view class="menu-item" bindtap="goToAbout">
+      <text class="menu-icon-txt">ℹ️</text>
+      <text class="menu-label">关于小程序</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="goToFeedback">
+      <text class="menu-icon-txt">💬</text>
+      <text class="menu-label">意见反馈</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-row">
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
+
+  <view class="version-txt">IPD项目管理 v1.1.0</view>
+
+  <!-- 编辑资料弹窗 -->
+  <view class="modal {{showEditModal ? 'show' : ''}}" wx:if="{{showEditModal}}">
+    <view class="modal-mask" bindtap="hideEditModal"></view>
+    <view class="modal-panel">
+      <view class="modal-hd">
+        <text class="modal-title">编辑资料</text>
+        <text class="modal-close" bindtap="hideEditModal">×</text>
+      </view>
+      <view class="modal-bd">
+        <view class="edit-item">
+          <text class="edit-label">昵称</text>
+          <input class="edit-input" value="{{editForm.nickname}}" placeholder="请输入昵称" bindinput="onNicknameInput"/>
+        </view>
+        <view class="edit-item">
+          <text class="edit-label">部门</text>
+          <input class="edit-input" value="{{editForm.department}}" placeholder="如：研发部" bindinput="onDeptInput"/>
+        </view>
+      </view>
+      <view class="modal-ft">
+        <button class="btn-cancel" bindtap="hideEditModal">取消</button>
+        <button class="btn-save" bindtap="saveProfile">保存</button>
+      </view>
+    </view>
+  </view>
+
+</view>

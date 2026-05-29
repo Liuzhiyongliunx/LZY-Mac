@@ -1,0 +1,13 @@
+# 微信小程序开发工具生成的私有配置（含个人AppID，不提交）
+project.private.config.json
+
+# 微信开发者工具缓存
+.idea/
+.DS_Store
+*.log
+
+# 云函数依赖（若后续引入云函数）
+cloudfunctions/*/node_modules/
+
+# 本地构建产物
+miniprogram_npm/

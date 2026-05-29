@@ -1,0 +1,160 @@
+<view class="page">
+  <!-- 打卡头部 -->
+  <view class="checkin-header">
+    <view class="header-info">
+      <text class="header-date">{{today}}</text>
+      <text class="header-weekday">{{weekday}}</text>
+    </view>
+    <view class="header-time">
+      <text class="time-text">{{currentTime}}</text>
+    </view>
+  </view>
+
+  <!-- 工作内容输入区域 -->
+  <view class="work-section card">
+    <view class="section-header">
+      <text class="section-title">今日工作计划</text>
+      <text class="task-count">{{taskList.length}} 项任务</text>
+    </view>
+
+    <!-- 添加任务按钮 -->
+    <view class="add-task" bindtap="showAddTask">
+      <text class="add-icon">+</text>
+      <text>添加工作任务</text>
+    </view>
+
+    <!-- 任务列表 -->
+    <view class="task-list">
+      <view wx:for="{{taskList}}" wx:key="id" class="task-item">
+        <view class="task-main">
+          <view class="task-info">
+            <view class="task-name-row">
+              <view class="priority-dot priority-{{item.priority}}"></view>
+              <text class="task-name">{{item.name}}</text>
+            </view>
+            <view class="task-meta-row">
+              <text class="task-time">⏱ {{item.estimatedTime}}h</text>
+              <text wx:if="{{item.deadline}}" class="task-deadline">📅 截止{{item.deadline}}</text>
+            </view>
+          </view>
+          <view class="task-actions">
+            <text class="action-edit" bindtap="editTask" data-id="{{item.id}}">编辑</text>
+            <text class="action-delete" bindtap="deleteTask" data-id="{{item.id}}">删除</text>
+          </view>
+        </view>
+        <view wx:if="{{item.description}}" class="task-desc">{{item.description}}</view>
+      </view>
+    </view>
+
+    <!-- 无任务提示 -->
+    <view wx:if="{{taskList.length === 0}}" class="empty-tip">
+      <text>点击上方按钮添加今日工作计划</text>
+    </view>
+  </view>
+
+  <!-- 时间统计 -->
+  <view class="stats-section card">
+    <view class="stats-row">
+      <view class="stats-item">
+        <text class="stats-value">{{totalHours}}</text>
+        <text class="stats-label">计划工时(小时)</text>
+      </view>
+      <view class="stats-divider"></view>
+      <view class="stats-item">
+        <text class="stats-value">{{workloadLevel}}</text>
+        <text class="stats-label">工作量评估</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡按钮 -->
+  <view class="checkin-footer">
+    <button class="btn-primary checkin-btn {{isSubmitting ? 'disabled' : ''}}" 
+            bindtap="submitCheckin" 
+            disabled="{{isSubmitting}}">
+      {{isSubmitting ? '提交中...' : '确认打卡'}}
+    </button>
+    <text class="checkin-tips">打卡后将记录今日工作计划</text>
+  </view>
+
+  <!-- 添加/编辑任务弹窗 -->
+  <view class="modal {{showModal ? 'show' : ''}}" wx:if="{{showModal}}">
+    <view class="modal-mask" bindtap="hideModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">{{editingTask ? '编辑任务' : '添加任务'}}</text>
+        <text class="modal-close" bindtap="hideModal">×</text>
+      </view>
+      
+      <view class="modal-body">
+        <!-- 任务名称 -->
+        <view class="form-item">
+          <text class="form-label">任务名称 *</text>
+          <input class="form-input" 
+                 placeholder="请输入任务名称" 
+                 value="{{taskForm.name}}"
+                 bindinput="onTaskNameInput"/>
+        </view>
+
+        <!-- 任务描述 -->
+        <view class="form-item">
+          <text class="form-label">任务描述</text>
+          <textarea class="form-textarea" 
+                    placeholder="请输入任务描述（选填）"
+                    value="{{taskForm.description}}"
+                    bindinput="onTaskDescInput"
+                    maxlength="200"></textarea>
+        </view>
+
+        <!-- 预计时间 -->
+        <view class="form-item">
+          <text class="form-label">预计时间（小时） *</text>
+          <view class="time-picker">
+            <view class="time-btn {{taskForm.estimatedTime === 0.5 ? 'active' : ''}}" 
+                  bindtap="setEstimatedTime" data-time="0.5">0.5h</view>
+            <view class="time-btn {{taskForm.estimatedTime === 1 ? 'active' : ''}}" 
+                  bindtap="setEstimatedTime" data-time="1">1h</view>
+            <view class="time-btn {{taskForm.estimatedTime === 2 ? 'active' : ''}}" 
+                  bindtap="setEstimatedTime" data-time="2">2h</view>
+            <view class="time-btn {{taskForm.estimatedTime === 3 ? 'active' : ''}}" 
+                  bindtap="setEstimatedTime" data-time="3">3h</view>
+            <view class="time-btn {{taskForm.estimatedTime === 4 ? 'active' : ''}}" 
+                  bindtap="setEstimatedTime" data-time="4">4h</view>
+            <view class="time-btn {{taskForm.estimatedTime === 8 ? 'active' : ''}}" 
+                  bindtap="setEstimatedTime" data-time="8">8h</view>
+          </view>
+        </view>
+
+        <!-- 任务优先级 -->
+        <view class="form-item">
+          <text class="form-label">优先级</text>
+          <view class="priority-picker">
+            <view class="priority-btn {{taskForm.priority === 'high' ? 'active high' : ''}}" 
+                  bindtap="setPriority" data-priority="high">高</view>
+            <view class="priority-btn {{taskForm.priority === 'medium' ? 'active medium' : ''}}" 
+                  bindtap="setPriority" data-priority="medium">中</view>
+            <view class="priority-btn {{taskForm.priority === 'low' ? 'active low' : ''}}" 
+                  bindtap="setPriority" data-priority="low">低</view>
+          </view>
+        </view>
+
+        <!-- 截止日期 -->
+        <view class="form-item">
+          <text class="form-label">截止日期（选填）</text>
+          <picker mode="date" value="{{taskForm.deadline}}" bindchange="onDeadlineChange">
+            <view class="date-picker-box {{taskForm.deadline ? 'has-value' : ''}}">
+              <text>{{taskForm.deadline || '请选择截止日期'}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+          <text wx:if="{{taskForm.deadline}}" class="clear-date" bindtap="clearDeadline">✕ 清除日期</text>
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <button class="btn-secondary" bindtap="hideModal">取消</button>
+        <button class="btn-primary" bindtap="saveTask">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

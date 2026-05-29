@@ -1,0 +1,301 @@
+/* pages/index/index.wxss */
+
+.page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 登录页面 */
+.login-container {
+  padding: 60rpx 30rpx;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 24rpx;
+}
+
+.app-name {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.app-desc {
+  display: block;
+  font-size: 28rpx;
+  color: #999;
+}
+
+.login-card {
+  padding: 40rpx;
+}
+
+.login-tips {
+  display: block;
+  color: #666;
+  margin-bottom: 40rpx;
+}
+
+.login-btn {
+  margin-bottom: 24rpx;
+}
+
+/* 已登录主页面 */
+.main-container {
+  padding: 30rpx;
+}
+
+/* 今日状态卡片 */
+.today-status {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  color: #fff;
+}
+
+.status-header {
+  margin-bottom: 30rpx;
+}
+
+.date-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-right: 20rpx;
+}
+
+.weekday-text {
+  font-size: 28rpx;
+  opacity: 0.8;
+}
+
+.status-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.status-icon {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  margin-right: 24rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.status-icon.checked {
+  background-color: #52c41a;
+}
+
+.status-icon.unchecked {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.status-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.status-desc {
+  display: block;
+  font-size: 26rpx;
+  opacity: 0.8;
+}
+
+.today-status .btn-primary {
+  background-color: #fff;
+  color: #1890ff;
+}
+
+.today-status .btn-secondary {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: none;
+}
+
+.rest-day {
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 28rpx;
+  opacity: 0.8;
+}
+
+/* 快捷入口 */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 0;
+}
+
+.action-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-bottom: 12rpx;
+}
+
+.action-item text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 提醒卡片 */
+.remind-card .section-title {
+  margin-bottom: 8rpx;
+}
+
+/* 用户卡片 */
+.user-card {
+  margin-bottom: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.avatar-placeholder {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  background-color: #1890ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 600;
+}
+
+.user-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-bottom: 6rpx;
+}
+
+.user-dept {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: #1890ff;
+  font-size: 28rpx;
+}
+
+.btn-text::after {
+  border: none;
+}
+
+/* 待办任务 */
+.pending-tasks {
+  margin-bottom: 20rpx;
+}
+
+.pending-tasks .flex-between {
+  margin-bottom: 20rpx;
+}
+
+.task-count {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.arrow {
+  font-size: 40rpx;
+  color: #ccc;
+  line-height: 1;
+}
+
+.task-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.task-item-mini {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.task-item-mini:last-child {
+  border-bottom: none;
+}
+
+.priority-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.priority-high {
+  background-color: #fa541c;
+}
+
+.priority-medium {
+  background-color: #1890ff;
+}
+
+.priority-low {
+  background-color: #52c41a;
+}
+
+.task-name-mini {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.more-tasks {
+  text-align: center;
+  padding: 16rpx 0;
+}
+
+.more-tasks text {
+  font-size: 26rpx;
+  color: #1890ff;
+}

@@ -1,0 +1,122 @@
+<view class="page">
+
+  <!-- 月份导航 -->
+  <view class="month-nav-bar">
+    <view class="nav-arrow" bindtap="prevMonth">‹</view>
+    <view class="month-title">{{currentMonthStr}}</view>
+    <view class="nav-arrow" bindtap="nextMonth">›</view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-card">
+    <view class="stats-row">
+      <view class="stat-col">
+        <text class="stat-val">{{monthStats.checkedDays}}/{{monthStats.totalDays}}</text>
+        <text class="stat-lbl">打卡天数</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-col">
+        <text class="stat-val blue">{{monthStats.completionRate}}</text>
+        <text class="stat-lbl">出勤率</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-col">
+        <text class="stat-val">{{monthStats.totalHours}}</text>
+        <text class="stat-lbl">总工时</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-col">
+        <text class="stat-val">{{monthStats.avgTasks}}</text>
+        <text class="stat-lbl">日均任务</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 近7天柱状图 -->
+  <view class="chart-card">
+    <view class="card-title">近7天工时</view>
+    <view class="bar-chart">
+      <view wx:for="{{chartBars}}" wx:key="label" class="bar-col">
+        <text class="bar-val">{{item.hours > 0 ? item.hours : ''}}</text>
+        <view class="bar-wrap">
+          <view class="bar-fill {{item.isToday ? 'bar-today' : (item.hasData ? 'bar-has' : 'bar-empty')}}" style="height:{{item.height}}%"></view>
+        </view>
+        <text class="bar-label {{item.isToday ? 'today-label' : ''}}">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 视图切换 -->
+  <view class="view-tabs">
+    <view class="view-tab {{viewMode === 'list' ? 'active' : ''}}" bindtap="switchView" data-mode="list">列表</view>
+    <view class="view-tab {{viewMode === 'calendar' ? 'active' : ''}}" bindtap="switchView" data-mode="calendar">日历</view>
+  </view>
+
+  <!-- 列表视图 -->
+  <view wx:if="{{viewMode === 'list'}}">
+    <view wx:if="{{records.length === 0}}" class="empty-box">
+      <text class="empty-icon">📅</text>
+      <text class="empty-text">本月暂无打卡记录</text>
+    </view>
+
+    <view class="record-list">
+      <view
+        wx:for="{{records}}"
+        wx:key="id"
+        class="record-card"
+        bindtap="viewRecord"
+        data-id="{{item.id}}"
+      >
+        <!-- 左侧日期 -->
+        <view class="record-left">
+          <text class="rec-day">{{item.day}}</text>
+          <text class="rec-week">{{item.weekday}}</text>
+        </view>
+        <!-- 右侧内容 -->
+        <view class="record-right">
+          <view class="rec-row1">
+            <text class="rec-time">{{item.checkinTime}} 打卡</text>
+            <view class="rec-badge">
+              <text>{{item.taskCount}}任务 · {{item.totalHours}}h</text>
+            </view>
+          </view>
+          <!-- 任务完成进度条 -->
+          <view class="rec-progress-bar">
+            <view class="rec-progress-fill" style="width:{{item.doneCount > 0 ? (item.doneCount / item.taskCount * 100) : 0}}%"></view>
+          </view>
+          <text class="rec-done-txt">已完成 {{item.doneCount}}/{{item.taskCount}} 项</text>
+        </view>
+        <view class="rec-arrow">›</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日历视图 -->
+  <view wx:if="{{viewMode === 'calendar'}}" class="calendar-box">
+    <!-- 星期表头 -->
+    <view class="cal-header">
+      <text wx:for="{{['日','一','二','三','四','五','六']}}" wx:key="*this" class="cal-week-label">{{item}}</text>
+    </view>
+    <!-- 日期格子 -->
+    <view class="cal-grid">
+      <view
+        wx:for="{{calendarDays}}"
+        wx:key="index"
+        class="cal-cell {{item.empty ? 'empty' : ''}} {{item.isToday ? 'today' : ''}} {{item.isChecked ? 'checked' : ''}} {{item.isMissed ? 'missed' : ''}} {{item.isWeekend ? 'weekend' : ''}}"
+        bindtap="onCalendarDayTap"
+        data-datestr="{{item.dateStr}}"
+        data-ischecked="{{item.isChecked}}"
+      >
+        <text wx:if="{{!item.empty}}" class="cal-day-num">{{item.day}}</text>
+        <view wx:if="{{item.isChecked}}" class="cal-dot"></view>
+      </view>
+    </view>
+    <!-- 图例 -->
+    <view class="cal-legend">
+      <view class="legend-item"><view class="legend-dot dot-checked"></view><text>已打卡</text></view>
+      <view class="legend-item"><view class="legend-dot dot-missed"></view><text>未打卡</text></view>
+      <view class="legend-item"><view class="legend-dot dot-weekend"></view><text>周末</text></view>
+    </view>
+  </view>
+
+</view>

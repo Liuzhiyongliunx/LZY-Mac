@@ -1,0 +1,100 @@
+<view class="page">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!isLoggedIn}}" class="login-container">
+    <view class="login-header">
+      <text class="app-name">IPD项目管理</text>
+      <text class="app-desc">研发团队工作打卡与规划工具</text>
+    </view>
+    
+    <view class="login-card card">
+      <text class="section-title">欢迎使用</text>
+      <text class="login-tips">登录后可使用每日打卡、工作规划等功能</text>
+      
+      <button class="btn-primary login-btn" bindtap="simulateLogin">
+        微信一键登录（测试模式）
+      </button>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:else class="main-container">
+    <!-- 今日打卡状态 -->
+    <view class="today-status card">
+      <view class="status-header">
+        <text class="date-text">{{today}}</text>
+        <text class="weekday-text">{{weekday}}</text>
+      </view>
+      
+      <view class="status-content">
+        <view class="status-icon {{hasCheckedIn ? 'checked' : 'unchecked'}}">
+          <text wx:if="{{hasCheckedIn}}">✓</text>
+          <text wx:else>○</text>
+        </view>
+        
+        <view class="status-info">
+          <text class="status-title">{{hasCheckedIn ? '今日已打卡' : '今日待打卡'}}</text>
+          <text class="status-desc">{{hasCheckedIn ? '已完成工作规划' : '点击下方按钮进行打卡'}}</text>
+        </view>
+      </view>
+      
+      <button wx:if="{{!hasCheckedIn && isWorkday}}" class="btn-primary" bindtap="goToCheckin">
+        立即打卡
+      </button>
+      
+      <button wx:if="{{hasCheckedIn}}" class="btn-secondary" bindtap="viewTodayPlan">
+        查看今日计划
+      </button>
+      
+      <view wx:if="{{!isWorkday}}" class="rest-day">
+        <text>今日休息日，无需打卡</text>
+      </view>
+    </view>
+
+    <!-- 待办任务 -->
+    <view class="pending-tasks card" wx:if="{{pendingTasksCount > 0}}">
+      <view class="flex-between" bindtap="goToTasks">
+        <view>
+          <text class="section-title">待办任务</text>
+          <text class="task-count">{{pendingTasksCount}} 项待完成</text>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+      <view class="task-preview">
+        <view wx:for="{{pendingTasks}}" wx:key="id" class="task-item-mini">
+          <view class="priority-dot priority-{{item.priority}}"></view>
+          <text class="task-name-mini">{{item.name}}</text>
+        </view>
+        <view wx:if="{{pendingTasksCount > 5}}" class="more-tasks">
+          <text>查看全部 {{pendingTasksCount}} 项任务</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 打卡提醒设置 -->
+    <view class="remind-card card">
+      <view class="flex-between">
+        <view>
+          <text class="section-title">每日打卡提醒</text>
+          <text class="text-secondary">工作日 9:00 提醒打卡</text>
+        </view>
+        <switch checked="{{remindEnabled}}" bindchange="onRemindChange" color="#1890ff"/>
+      </view>
+    </view>
+
+    <!-- 用户信息 -->
+    <view class="user-card card">
+      <view class="flex-between">
+        <view class="user-info">
+          <view class="avatar-placeholder">
+            <text class="avatar-text">{{userInfo.nickname}}</text>
+          </view>
+          <view class="user-detail">
+            <text class="user-name">{{userInfo.nickname}}</text>
+            <text class="user-dept">{{userInfo.department}}</text>
+          </view>
+        </view>
+        <button class="btn-text" bindtap="logout">退出</button>
+      </view>
+    </view>
+  </view>
+</view>
