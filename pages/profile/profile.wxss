@@ -194,6 +194,16 @@
   padding: 32rpx 0 0;
 }
 
+/* ---- 诊断按钮 ---- */
+.diag-row {
+  text-align: center;
+  padding: 16rpx 0 30rpx;
+}
+.diag-txt {
+  font-size: 24rpx;
+  color: #999;
+}
+
 /* ---- 编辑弹窗 ---- */
 .modal {
   position: fixed;

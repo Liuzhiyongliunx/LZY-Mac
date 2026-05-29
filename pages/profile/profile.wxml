@@ -94,6 +94,11 @@
 
   <view class="version-txt">IPD项目管理 v1.1.0</view>
 
+  <!-- 诊断按钮（开发调试用） -->
+  <view class="diag-row" bindtap="checkSync">
+    <text class="diag-txt">🔄 检测云端同步状态</text>
+  </view>
+
   <!-- 编辑资料弹窗 -->
   <view class="modal {{showEditModal ? 'show' : ''}}" wx:if="{{showEditModal}}">
     <view class="modal-mask" bindtap="hideEditModal"></view>

@@ -177,5 +177,37 @@ Page({
         }
       }
     });
+  },
+
+  // 检测云端同步状态
+  async checkSync() {
+    wx.showLoading({ title: '检测中...' });
+    try {
+      const localRecords = wx.getStorageSync('checkinRecords') || [];
+      const hasCloud = typeof wx !== 'undefined' && wx.cloud ? '✅ 可用' : '❌ 不可用';
+      
+      let cloudCount = 0;
+      let cloudError = '';
+      try {
+        const result = await wx.cloud.database().collection('checkins').get();
+        cloudCount = result.data.length;
+      } catch (e) {
+        cloudError = e.errMsg || e.message || '未知错误';
+      }
+      
+      wx.hideLoading();
+      wx.showModal({
+        title: '云端同步诊断',
+        content: `📱 本地记录: ${localRecords.length} 条\n☁️ 云端记录: ${cloudCount} 条\n🔌 wx.cloud: ${hasCloud}\n${cloudError ? '❌ 错误: ' + cloudError : '✅ 一切正常'}`,
+        showCancel: false
+      });
+    } catch (e) {
+      wx.hideLoading();
+      wx.showModal({
+        title: '诊断失败',
+        content: e.message,
+        showCancel: false
+      });
+    }
   }
 });
