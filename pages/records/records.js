@@ -1,5 +1,6 @@
 // pages/records/records.js
 const app = getApp();
+const db = require('../../utils/db');
 
 Page({
   data: {
@@ -23,14 +24,19 @@ Page({
   onShow() {
     const now = new Date();
     this.setData({ currentYear: now.getFullYear(), currentMonth: now.getMonth() + 1 });
-    this.loadMonth(now.getFullYear(), now.getMonth() + 1);
-    this.buildChart();
+    this.loadData();
   },
 
-  // 加载指定月份数据
-  loadMonth(year, month) {
+  // 统一加载数据
+  async loadData() {
+    await this.loadMonth(this.data.currentYear, this.data.currentMonth);
+    await this.buildChart();
+  },
+
+  // 加载指定月份数据（云端+本地）
+  async loadMonth(year, month) {
     const monthStr = `${year}年${month}月`;
-    const allRecords = wx.getStorageSync('checkinRecords') || [];
+    const allRecords = await db.getAllRecords();
 
     // 筛选本月记录
     const monthRecords = allRecords.filter(r => {
@@ -109,9 +115,9 @@ Page({
     return Math.round(avg);
   },
 
-  // 构建近7天柱状图
-  buildChart() {
-    const allRecords = wx.getStorageSync('checkinRecords') || [];
+  // 构建近7天柱状图（云端+本地）
+  async buildChart() {
+    const allRecords = await db.getAllRecords();
     const bars = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
@@ -144,15 +150,15 @@ Page({
   },
 
   // 上个月
-  prevMonth() {
+  async prevMonth() {
     let { currentYear, currentMonth } = this.data;
     currentMonth--;
     if (currentMonth < 1) { currentMonth = 12; currentYear--; }
-    this.loadMonth(currentYear, currentMonth);
+    await this.loadMonth(currentYear, currentMonth);
   },
 
   // 下个月
-  nextMonth() {
+  async nextMonth() {
     const now = new Date();
     let { currentYear, currentMonth } = this.data;
     currentMonth++;
@@ -161,7 +167,7 @@ Page({
       wx.showToast({ title: '无法查看未来月份', icon: 'none' });
       return;
     }
-    this.loadMonth(currentYear, currentMonth);
+    await this.loadMonth(currentYear, currentMonth);
   },
 
   // 切换视图
@@ -176,10 +182,10 @@ Page({
   },
 
   // 点击日历格子
-  onCalendarDayTap(e) {
+  async onCalendarDayTap(e) {
     const { datestr, ischecked } = e.currentTarget.dataset;
     if (!ischecked) return;
-    const allRecords = wx.getStorageSync('checkinRecords') || [];
+    const allRecords = await db.getAllRecords();
     const record = allRecords.find(r => r.date === datestr);
     if (record) {
       wx.navigateTo({ url: `/pages/checkin/checkin?mode=view&recordId=${record.id}` });

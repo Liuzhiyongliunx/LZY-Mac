@@ -1,5 +1,6 @@
 // pages/checkin/checkin.js
 const app = getApp();
+const db = require('../../utils/db');
 
 Page({
   data: {
@@ -335,8 +336,8 @@ Page({
     this.doCheckin();
   },
 
-  // 执行打卡
-  doCheckin() {
+  // 执行打卡（云端+本地双写）
+  async doCheckin() {
     if (this.data.isSubmitting) return;
     
     this.setData({ isSubmitting: true });
@@ -349,36 +350,26 @@ Page({
       id: `record_${Date.now()}`,
       date: app.getTodayString(),
       checkinTime,
-      userId: userInfo.openid,
-      userName: userInfo.nickname,
+      userId: userInfo ? userInfo.openid || userInfo.nickName || 'anonymous' : 'anonymous',
+      userName: userInfo ? userInfo.nickName || userInfo.nickname || '用户' : '用户',
       tasks: this.data.taskList,
       totalHours: this.data.totalHours,
       createTime: Date.now()
     };
     
-    // 保存到本地记录
-    const records = wx.getStorageSync('checkinRecords') || [];
-    const todayStr = app.getTodayString();
-    const existingIndex = records.findIndex(r => r.date === todayStr);
-    
-    if (existingIndex !== -1) {
-      records[existingIndex] = record;
-    } else {
-      records.unshift(record);
-    }
-    
-    wx.setStorageSync('checkinRecords', records);
+    // 保存到云端+本地双写
+    const result = await db.saveCheckin(record);
     
     // 清除今日草稿
-    const todayStr2 = app.getTodayString();
+    const todayStr = app.getTodayString();
     const draft = wx.getStorageSync('taskDraft') || {};
-    delete draft[todayStr2];
+    delete draft[todayStr];
     wx.setStorageSync('taskDraft', draft);
     
     this.setData({ isSubmitting: false });
     
     wx.showToast({
-      title: '打卡成功',
+      title: '打卡成功' + (result.source === 'local' ? '(本地)' : ''),
       icon: 'success'
     });
     
@@ -388,9 +379,9 @@ Page({
     }, 1500);
   },
 
-  // 加载已有记录（查看模式）
-  loadRecord(recordId) {
-    const records = wx.getStorageSync('checkinRecords') || [];
+  // 加载已有记录（查看模式，云端+本地）
+  async loadRecord(recordId) {
+    const records = await db.getAllRecords();
     const record = records.find(r => r.id === recordId);
     if (record) {
       this.setData({

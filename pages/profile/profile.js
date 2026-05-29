@@ -1,5 +1,6 @@
 // pages/profile/profile.js
 const app = getApp();
+const db = require('../../utils/db');
 
 Page({
   data: {
@@ -33,8 +34,8 @@ Page({
     this.setData({ userInfo });
   },
 
-  // 加载统计数据
-  loadStats() {
+  // 加载统计数据（云端+本地）
+  async loadStats() {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
@@ -47,7 +48,7 @@ Page({
       if (w !== 0 && w !== 6) totalDays++;
     }
 
-    const allRecords = wx.getStorageSync('checkinRecords') || [];
+    const allRecords = await db.getAllRecords();
     const monthRecords = allRecords.filter(r => {
       const parts = r.date.split('-');
       return parseInt(parts[0]) === year && parseInt(parts[1]) === month;
@@ -119,9 +120,9 @@ Page({
     this.setData({ showEditModal: false });
   },
 
-  // 导出打卡记录（生成文本摘要）
-  goToExport() {
-    const allRecords = wx.getStorageSync('checkinRecords') || [];
+  // 导出打卡记录（生成文本摘要，云端+本地）
+  async goToExport() {
+    const allRecords = await db.getAllRecords();
     if (allRecords.length === 0) {
       wx.showToast({ title: '暂无记录可导出', icon: 'none' });
       return;

@@ -1,5 +1,6 @@
 // pages/tasks/tasks.js
 const app = getApp();
+const db = require('../../utils/db');
 
 Page({
   data: {
@@ -24,9 +25,9 @@ Page({
     this.loadTasks();
   },
 
-  // 加载所有任务
-  loadTasks() {
-    const records = wx.getStorageSync('checkinRecords') || [];
+  // 加载所有任务（云端+本地）
+  async loadTasks() {
+    const records = await db.getAllRecords();
     const allTasks = [];
 
     records.forEach(record => {
@@ -122,37 +123,13 @@ Page({
     this.updateTaskProgress(taskid, value);
   },
 
-  // 更新任务进度
-  updateTaskProgress(taskId, progress) {
-    const records = wx.getStorageSync('checkinRecords') || [];
-    let updated = false;
+  // 更新任务进度（云端+本地）
+  async updateTaskProgress(taskId, progress) {
+    await db.updateTaskProgress(taskId, progress);
+    this.loadTasks();
 
-    records.forEach(record => {
-      if (record.tasks) {
-        record.tasks.forEach(task => {
-          if (task.id === taskId) {
-            task.progress = progress;
-            if (progress >= 100) {
-              task.status = 'completed';
-              task.completedTime = Date.now();
-            } else if (progress > 0) {
-              task.status = 'doing';
-            } else {
-              task.status = 'pending';
-            }
-            updated = true;
-          }
-        });
-      }
-    });
-
-    if (updated) {
-      wx.setStorageSync('checkinRecords', records);
-      this.loadTasks();
-
-      if (progress >= 100) {
-        wx.showToast({ title: '任务已完成！🎉', icon: 'success' });
-      }
+    if (progress >= 100) {
+      wx.showToast({ title: '任务已完成！🎉', icon: 'success' });
     }
   },
 

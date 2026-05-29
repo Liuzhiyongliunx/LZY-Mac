@@ -1,5 +1,6 @@
 // pages/index/index.js
 const app = getApp();
+const db = require('../../utils/db');
 
 Page({
   data: {
@@ -19,11 +20,11 @@ Page({
     this.initData();
   },
 
-  onShow() {
+  async onShow() {
     // 每次显示页面时刷新数据
     this.initData();
-    this.checkTodayCheckin();
-    this.loadPendingTasks();
+    await this.checkTodayCheckin();
+    await this.loadPendingTasks();
   },
 
   // 初始化数据
@@ -51,12 +52,12 @@ Page({
     });
   },
 
-  // 检查今日打卡状态
-  checkTodayCheckin() {
+  // 检查今日打卡状态（云端+本地）
+  async checkTodayCheckin() {
     if (!app.globalData.isLoggedIn) return;
     
     const today = app.getTodayString();
-    const records = wx.getStorageSync('checkinRecords') || [];
+    const records = await db.getAllRecords();
     const todayRecord = records.find(r => r.date === today);
     
     this.setData({
@@ -65,9 +66,9 @@ Page({
     });
   },
 
-  // 加载待办任务
-  loadPendingTasks() {
-    const records = wx.getStorageSync('checkinRecords') || [];
+  // 加载待办任务（云端+本地）
+  async loadPendingTasks() {
+    const records = await db.getAllRecords();
     const allTasks = [];
     
     records.forEach(record => {
