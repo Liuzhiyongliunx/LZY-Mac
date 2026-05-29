@@ -168,26 +168,7 @@ Page({
     });
   },
 
-  // 删除任务
-  deleteTask(e) {
-    const { taskid, recordid } = e.currentTarget.dataset;
-    wx.showModal({
-      title: '确认删除',
-      content: '删除后不可恢复，确定删除？',
-      success: res => {
-        if (!res.confirm) return;
-        const records = wx.getStorageSync('checkinRecords') || [];
-        records.forEach(record => {
-          if (record.id === recordid && record.tasks) {
-            record.tasks = record.tasks.filter(t => t.id !== taskid);
-          }
-        });
-        wx.setStorageSync('checkinRecords', records);
-        this.loadTasks();
-        wx.showToast({ title: '已删除', icon: 'success' });
-      }
-    });
-  },
+  // ✅ 任务永久存储，不支持删除操作
 
   // 跳转到打卡页面添加任务
   goAddTask() {

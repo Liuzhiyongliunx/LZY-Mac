@@ -151,22 +151,7 @@ Page({
     }
   },
 
-  // 删除任务
-  deleteTask(e) {
-    const taskId = e.currentTarget.dataset.id;
-    wx.showModal({
-      title: '确认删除',
-      content: '确定要删除这个任务吗？',
-      success: res => {
-        if (res.confirm) {
-          const taskList = this.data.taskList.filter(t => t.id !== taskId);
-          this.setData({ taskList });
-          this.calculateStats();
-          this.saveDraft();
-        }
-      }
-    });
-  },
+  // ✅ 任务永久存储，不支持删除操作
 
   // 隐藏弹窗（强制保存草稿防止内容丢失）
   hideModal() {

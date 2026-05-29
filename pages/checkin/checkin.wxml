@@ -39,7 +39,6 @@
           </view>
           <view class="task-actions">
             <text class="action-edit" bindtap="editTask" data-id="{{item.id}}">编辑</text>
-            <text class="action-delete" bindtap="deleteTask" data-id="{{item.id}}">删除</text>
           </view>
         </view>
         <view wx:if="{{item.description}}" class="task-desc">{{item.description}}</view>

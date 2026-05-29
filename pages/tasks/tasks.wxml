@@ -108,9 +108,9 @@
           />
         </view>
 
-        <!-- 操作按钮 -->
+        <!-- 状态标签 -->
         <view class="action-row">
-          <view class="action-btn del-btn" bindtap="deleteTask" data-taskid="{{item.id}}" data-recordid="{{item.recordId}}">删除</view>
+          <view class="status-tag status-{{item.progress >= 100 ? 'done' : item.progress > 0 ? 'doing' : 'pending'}}">{{item.progress >= 100 ? '已完成' : item.progress > 0 ? '进行中' : '待开始'}}</view>
         </view>
       </view>
     </view>
