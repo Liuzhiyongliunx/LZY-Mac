@@ -20,10 +20,43 @@ App({
         });
         this.globalData.cloudReady = true;
         console.log('云开发已就绪');
+        
+        // 将本地已有数据同步到云端
+        this.syncLocalToCloud();
       }
     } catch (e) {
       console.log('云开发未开通，使用本地存储模式');
       this.globalData.cloudReady = false;
+    }
+  },
+
+  // 将本地存储的旧数据同步到云端（首次启动时执行）
+  async syncLocalToCloud() {
+    try {
+      const LOCAL_KEY = 'checkinRecords';
+      const localRecords = wx.getStorageSync(LOCAL_KEY) || [];
+      if (localRecords.length === 0) return;
+      
+      const collection = wx.cloud.database().collection('checkins');
+      for (const record of localRecords) {
+        const exist = await collection.where({ date: record.date }).get();
+        if (exist.data.length === 0) {
+          await collection.add({
+            data: {
+              date: record.date,
+              checkinTime: record.checkinTime,
+              userId: record.userId,
+              userName: record.userName,
+              tasks: record.tasks || [],
+              totalHours: record.totalHours,
+              createTime: record.createTime
+            }
+          });
+        }
+      }
+      console.log(`[Sync] 已同步 ${localRecords.length} 条本地记录到云端`);
+    } catch (e) {
+      console.warn('[Sync] 本地同步到云端失败（可忽略，后续写入会自动同步）:', e);
     }
   },
 
