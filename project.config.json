@@ -9,6 +9,7 @@
     "es6": true,
     "enhance": true,
     "postcss": true,
+    "cloud": true,
     "preloadBackgroundData": false,
     "minified": true,
     "newFeature": true,

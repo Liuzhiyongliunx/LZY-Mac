@@ -6,6 +6,7 @@
     "pages/tasks/tasks",
     "pages/profile/profile"
   ],
+  "cloudfunctionRoot": "./cloudfunctions/",
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1890ff",
